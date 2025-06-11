@@ -1,0 +1,34 @@
+﻿<Page
+    
+    x:Class="bibKliWitkowski.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:bibKliWitkowski"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="Yellow">
+
+    <Grid >
+        <NavigationView IsBackEnabled="{x:Bind frmMain.CanGoBack, Mode=OneWay}" BackRequested="NavView_BackRequested" Name="NavView" OpenPaneLength="200" ItemInvoked="NavView_ItemInvoked" Header="wybrano: ">
+            <NavigationView.MenuItems>
+                <NavigationViewItem Name="AuthorListMenuItem" Icon="People" Content="Autorzy" />
+                <NavigationViewItem Name="PublisherListMenuItem" Icon="Copy" Content="Wydawcy"/>
+                <NavigationViewItem Name="BookListMenuItem" Icon="Library" Content="Książki"/>
+                <NavigationViewItem Name="Help" Icon="Help" Content="Pomoc" Tapped="btPomoc_Tapped"/>
+            </NavigationView.MenuItems>
+            <NavigationView.PaneFooter>
+                <StackPanel>
+                    <NavigationViewItem Name="WWWpage" Icon="World" Content="Strona WWW" Tapped="btStronaWWW_Tapped"/>
+                </StackPanel>
+            </NavigationView.PaneFooter>
+            <Frame Name="frmMain" Margin="20,0,0,0"/>
+        </NavigationView>
+        <!--<StackPanel VerticalAlignment="Top" >
+            <Button Content="Autorzy" />
+            <Button Content="POMOC" Name="btPomoc" Tapped="btPomoc_Tapped"/>
+        <Button Content="Strona WWW" Name="btStronaWWW" Tapped="btStronaWWW_Tapped" />
+        <Button Content="Ustawienia" Name="btUstawienia" Tapped="btUstawienia_Tapped"/>-->
+        <!--</StackPanel>-->
+    </Grid>
+</Page>
