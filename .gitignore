@@ -1,1 +1,63 @@
+## Build results
+[Bb]in/
+[Oo]bj/
+
+## VS Code
+.vscode/
+
+## User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+## Mono Auto Generated Files
+mono_crash.*
+
+## Visual Studio
+.vs/
+.vsconfig
+
+## Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+## UWP generated folders
+Generated Files/
+Package.appxmanifest
+*.appx
+*.appxbundle
+*.msix
+*.msixbundle
+*.appxupload
+
+## Others
+*.log
+*.pdb
+*.cache
+*.dbmdl
+*.bak
+
+# DotCover
+.idea/
+.ReSharper*/
+*_Resharper*/ 
+*.DotSettings.user
+
+# Windows Store
+AppPackages/
+BundleArtifacts/
+
+# NuGet
+*.nupkg
+*.snupkg
+project.lock.json
+project.fragment.lock.json
+artifacts/
+packages/
+.nuget/
+
+# Windows settings
+Desktop.ini
 
