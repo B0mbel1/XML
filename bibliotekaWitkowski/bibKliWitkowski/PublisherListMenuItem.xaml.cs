@@ -1,21 +1,9 @@
 ﻿using bibModelWitkowski.Model;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-
-//Szablon elementu Pusta strona jest udokumentowany na stronie https://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace bibKliWitkowski
 {
@@ -28,9 +16,11 @@ namespace bibKliWitkowski
     {
         public DataGridDataSourcePublishers PublishersViewModel { get; set; }
         BDLibraryUWP dbUWP;
+
         public PublisherListMenuItem()
         {
             this.InitializeComponent();
+
             dbUWP = (App.Current as App).db;
 
             PublishersViewModel = new DataGridDataSourcePublishers()
@@ -47,19 +37,20 @@ namespace bibKliWitkowski
             dbUWP.Save();
             base.OnNavigatedFrom(e);
         }
+
         private void DodajWydawnictwo_Click(object sender, RoutedEventArgs e)
         {
             var noweWydawnictwo = new WydawnictwaWydawnictwo() { id = 0, nazwa = "Nazwa", strona = "Strona" };
             PublishersViewModel.Wydawnictwa.Add(noweWydawnictwo);
         }
+
         private void UsunWydawnictwo_Click(object sender, RoutedEventArgs e)
         {
-            if (PublishersDataGrid.SelectedItem is WydawnictwaWydawnictwo zaznaczoneWydawnictwo)
+            if (PublishersDataGrid.SelectedItem is WydawnictwaWydawnictwo zaznaczone)
             {
-                PublishersViewModel.Wydawnictwa.Remove(zaznaczoneWydawnictwo);
+                PublishersViewModel.Wydawnictwa.Remove(zaznaczone);
             }
         }
-
-
     }
 }
+

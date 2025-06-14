@@ -5,11 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 using bibModelWitkowski.Model;
-using Windows.Networking.Vpn;
-using System.Xml.Serialization;
-using bibModelWitkowski;
 using Windows.UI.Xaml.Controls;
 using System.IO;
+using System.Xml.Serialization;
+using bibModelWitkowski;
 
 namespace bibKliWitkowski
 {
@@ -27,9 +26,9 @@ namespace bibKliWitkowski
             this.authorsFIle = authorsFile;
             this.publishersFIle = publishersFIle;
             this.booksFile = booksFile;
-            this.pathUWP = pathUWP;
-            this.pathUWP = KnownFolders.DocumentsLibrary;
+            this.pathUWP = pathUWP ?? KnownFolders.DocumentsLibrary;
         }
+
         T Deserialize<T>(StorageFile file)
         {
             var xs = new XmlSerializer(typeof(T));
@@ -45,7 +44,6 @@ namespace bibKliWitkowski
                 return default;
             }
         }
-
         public async void TestData()
         {
             string kom = "";
@@ -53,22 +51,12 @@ namespace bibKliWitkowski
             var itemPF = await pathUWP.TryGetItemAsync(publishersFIle);
             var itemBF = await pathUWP.TryGetItemAsync(booksFile);
 
-            if (itemAF == null)
-            {
-                kom += $"{authorsFIle}, ";
-            }
-            if (itemPF == null)
-            {
-                kom += $"{publishersFIle}, ";
-            }
-            if (itemBF == null)
-            {
-                kom += $"{booksFile}, ";
-            }
+            if (itemAF == null) kom += $"{authorsFIle}, ";
+            if (itemPF == null) kom += $"{publishersFIle}, ";
+            if (itemBF == null) kom += $"{booksFile}, ";
 
             if (kom != "")
             {
-                //problem z danymi
                 var dlg = new ContentDialog()
                 {
                     Title = "Problem z plikami danych:",
@@ -79,54 +67,56 @@ namespace bibKliWitkowski
                 App.Current.Exit();
                 return;
             }
-            var lst = Deserialize<Autorzy>(itemAF as StorageFile).Autor;
-            AuthorsLst = (from item in lst
-                          orderby item.nazwisko
-                          select item).ToList();
-            //var lst2 = Deserialize<Ksiazki>(itemBF as StorageFile).Ksiazka;
-            //BooksLst = (from item in lst2
-            //            orderby item.tytul
-            //            select item).ToList();
 
-            return;
+            var lstA = Deserialize<Autorzy>(itemAF as StorageFile)?.Autor;
+            AuthorsLst = lstA?.OrderBy(x => x.nazwisko).ToList() ?? new List<AutorzyAutor>();
+
+            var lstP = Deserialize<Wydawnictwa>(itemPF as StorageFile)?.Wydawnictwo;
+            PublishersLst = lstP?.OrderBy(x => x.nazwa).ToList() ?? new List<WydawnictwaWydawnictwo>();
+
+            var lstB = Deserialize<Ksiazki>(itemBF as StorageFile)?.Ksiazka;
+            BooksLst = lstB?.OrderBy(x => x.tytul).ToList() ?? new List<KsiazkiKsiazka>();
         }
 
         async void Serializuj()
         {
-            var aut = new Autorzy() { Autor = AuthorsLst.ToArray() };
-            //var aut2 = new Ksiazki() { Ksiazka = BooksLst.ToArray() };
-
-            var xs = new XmlSerializer(typeof(Autorzy));
-            //var xs2 = new XmlSerializer (typeof(Ksiazki));
-
-
-            StorageFile nowy = await pathUWP.CreateFileAsync(authorsFIle, CreationCollisionOption.ReplaceExisting);
-            //StorageFile nowy2 = await pathUWP.CreateFileAsync(booksFile, CreationCollisionOption.ReplaceExisting);
-
             try
             {
-                using (Stream writer = await nowy.OpenStreamForWriteAsync())
+                var aut = new Autorzy() { Autor = AuthorsLst.ToArray() };
+                var xsAut = new XmlSerializer(typeof(Autorzy));
+                StorageFile nowyAut = await pathUWP.CreateFileAsync(authorsFIle, CreationCollisionOption.ReplaceExisting);
+                using (Stream writer = await nowyAut.OpenStreamForWriteAsync())
                 {
-                    xs.Serialize(writer, aut);
+                    xsAut.Serialize(writer, aut);
                 }
-                //using (Stream writer2 = await nowy2.OpenStreamForWriteAsync())
-                //{
-                //    xs2.Serialize(writer2, aut2);
-                //}
 
+                var wyd = new Wydawnictwa() { Wydawnictwo = PublishersLst.ToArray() };
+                var xsWyd = new XmlSerializer(typeof(Wydawnictwa));
+                StorageFile nowyWyd = await pathUWP.CreateFileAsync(publishersFIle, CreationCollisionOption.ReplaceExisting);
+                using (Stream writer = await nowyWyd.OpenStreamForWriteAsync())
+                {
+                    xsWyd.Serialize(writer, wyd);
+                }
+
+                var ks = new Ksiazki() { Ksiazka = BooksLst.ToArray() };
+                var xsKs = new XmlSerializer(typeof(Ksiazki));
+                StorageFile nowyKs = await pathUWP.CreateFileAsync(booksFile, CreationCollisionOption.ReplaceExisting);
+                using (Stream writer = await nowyKs.OpenStreamForWriteAsync())
+                {
+                    xsKs.Serialize(writer, ks);
+                }
             }
             catch (Exception ex)
             {
                 var dlg = new ContentDialog()
                 {
                     Title = ex.Message,
-                    Content = ex,
+                    Content = ex.ToString(),
                     CloseButtonText = "OK"
                 };
                 await dlg.ShowAsync();
             }
         }
-
         internal void Save()
         {
             Serializuj();
