@@ -48,7 +48,6 @@ namespace bibKliWitkowski
 
         public async void TestData()
         {
-            //bool jestOk = false;
             string kom = "";
             var itemAF = await pathUWP.TryGetItemAsync(authorsFIle);
             var itemPF = await pathUWP.TryGetItemAsync(publishersFIle);
@@ -84,20 +83,37 @@ namespace bibKliWitkowski
             AuthorsLst = (from item in lst
                           orderby item.nazwisko
                           select item).ToList();
+            //var lst2 = Deserialize<Ksiazki>(itemBF as StorageFile).Ksiazka;
+            //BooksLst = (from item in lst2
+            //            orderby item.tytul
+            //            select item).ToList();
+
             return;
         }
 
         async void Serializuj()
         {
             var aut = new Autorzy() { Autor = AuthorsLst.ToArray() };
+            //var aut2 = new Ksiazki() { Ksiazka = BooksLst.ToArray() };
+
             var xs = new XmlSerializer(typeof(Autorzy));
+            //var xs2 = new XmlSerializer (typeof(Ksiazki));
+
+
             StorageFile nowy = await pathUWP.CreateFileAsync(authorsFIle, CreationCollisionOption.ReplaceExisting);
+            //StorageFile nowy2 = await pathUWP.CreateFileAsync(booksFile, CreationCollisionOption.ReplaceExisting);
+
             try
             {
                 using (Stream writer = await nowy.OpenStreamForWriteAsync())
                 {
                     xs.Serialize(writer, aut);
                 }
+                //using (Stream writer2 = await nowy2.OpenStreamForWriteAsync())
+                //{
+                //    xs2.Serialize(writer2, aut2);
+                //}
+
             }
             catch (Exception ex)
             {

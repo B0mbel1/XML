@@ -1,52 +1,111 @@
-﻿using bibModelWitkowski.Model;
-using System;
-using System.Collections.Generic;
-using System.IO;
+﻿//using bibModelWitkowski.Model;
+//using System;
+//using System.Collections.Generic;
+//using System.IO;
+//using System.Linq;
+//using System.Runtime.InteropServices.WindowsRuntime;
+//using Windows.Foundation;
+//using Windows.Foundation.Collections;
+//using Windows.UI.Xaml;
+//using Windows.UI.Xaml.Controls;
+//using Windows.UI.Xaml.Controls.Primitives;
+//using Windows.UI.Xaml.Data;
+//using Windows.UI.Xaml.Input;
+//using Windows.UI.Xaml.Media;
+//using Windows.UI.Xaml.Navigation;
+
+//namespace bibKliWitkowski
+//{
+//    class DataGridDataSourceAuthors
+//    {
+//        public List<AutorzyAutor> Autorzy = new List<AutorzyAutor>();
+//    }
+
+//    public sealed partial class AuthorListMenuPage : Page
+//    {
+//        DataGridDataSourceAuthors AuthorsViewModel;
+//        BDLibraryUWP dbUWP;
+//        public AuthorListMenuPage()
+//        {
+//            dbUWP = (App.Current as App).db;
+//            AuthorsViewModel = new DataGridDataSourceAuthors()
+//            {
+//                Autorzy = dbUWP.AuthorsLst
+//            };
+//            this.InitializeComponent();
+//        }
+//        protected override void OnNavigatedFrom(NavigationEventArgs e)
+//        {
+//            var x = AuthorsViewModel.Autorzy;
+//            dbUWP.Save();
+//            base.OnNavigatedFrom(e);
+//        }
+
+//        private void DodajAutora_Click(object sender, RoutedEventArgs e)
+//        {
+
+
+//        }
+
+//        private void UsunAutora_Click(object sender, RoutedEventArgs e)
+//        {
+
+
+//        }
+//    }
+//}
+
+using bibModelWitkowski.Model;
+using System.Collections.ObjectModel;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-
-//Szablon elementu Pusta strona jest udokumentowany na stronie https://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace bibKliWitkowski
 {
-    //pomocnicza do danych
-
-    class DataGridDataSourceAuthors
+    public class DataGridDataSourceAuthors
     {
-        public List<AutorzyAutor> Autorzy = new List<AutorzyAutor>();
+        public ObservableCollection<AutorzyAutor> Autorzy { get; set; } = new ObservableCollection<AutorzyAutor>();
     }
 
-    /// <summary>
-    /// Pusta strona, która może być używana samodzielnie lub do której można nawigować wewnątrz ramki.
-    /// </summary>
     public sealed partial class AuthorListMenuPage : Page
     {
-        DataGridDataSourceAuthors AuthorsViewModel;
+        public DataGridDataSourceAuthors AuthorsViewModel { get; set; }
         BDLibraryUWP dbUWP;
+
         public AuthorListMenuPage()
         {
             dbUWP = (App.Current as App).db;
+
             AuthorsViewModel = new DataGridDataSourceAuthors()
             {
-                Autorzy = dbUWP.AuthorsLst
+                Autorzy = new ObservableCollection<AutorzyAutor>(dbUWP.AuthorsLst)
             };
+
             this.InitializeComponent();
+            this.DataContext = this; // umożliwia powiązanie XAML z AuthorsViewModel
         }
+
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            var x = AuthorsViewModel.Autorzy;
+            dbUWP.AuthorsLst = AuthorsViewModel.Autorzy.ToList(); // zapis zmian
             dbUWP.Save();
             base.OnNavigatedFrom(e);
         }
+
+        private void DodajAutora_Click(object sender, RoutedEventArgs e)
+        {
+            var nowyAutor = new AutorzyAutor() { imie = "Nowy", nazwisko = "Autor" }; // przykładowe dane
+            AuthorsViewModel.Autorzy.Add(nowyAutor);
+        }
+
+        private void UsunAutora_Click(object sender, RoutedEventArgs e)
+        {
+            if (AuthorsDataGrid.SelectedItem is AutorzyAutor zaznaczonyAutor)
+            {
+                AuthorsViewModel.Autorzy.Remove(zaznaczonyAutor);
+            }
+        }
     }
 }
-

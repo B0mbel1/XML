@@ -5,10 +5,27 @@
     xmlns:local="using:bibKliWitkowski"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
+        <StackPanel Margin="15">
 
+            <TextBlock Text="Książki" Style="{ThemeResource HeaderTextBlockStyle}" />
+
+            <StackPanel Orientation="Horizontal" Margin="0,10,0,10">
+                <Button Content="Dodaj" Click="DodajWydawnictwo_Click" Margin="5" />
+                <Button Content="Usuń zaznaczonego" Click="UsunWydawnictwo_Click" Margin="5" />
+            </StackPanel>
+
+            <toolkit:DataGrid
+            x:Name="PublishersDataGrid"
+            Margin="0,10,0,0"
+            AutoGenerateColumns="True"
+            ItemsSource="{x:Bind PublishersViewModel.Wydawnictwa, Mode=OneWay}"
+            Height="400" />
+
+        </StackPanel>
     </Grid>
 </Page>

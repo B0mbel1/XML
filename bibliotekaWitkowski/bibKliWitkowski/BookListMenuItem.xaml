@@ -3,12 +3,29 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:bibKliWitkowski"
+    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
+        <StackPanel Margin="15">
 
+            <TextBlock Text="Książki" Style="{ThemeResource HeaderTextBlockStyle}" />
+
+            <StackPanel Orientation="Horizontal" Margin="0,10,0,10">
+                <Button Content="Dodaj" Click="DodajKsiazke_Click" Margin="5" />
+                <Button Content="Usuń zaznaczonego" Click="UsunKsiazke_Click" Margin="5" />
+            </StackPanel>
+
+            <toolkit:DataGrid
+        x:Name="BooksDataGrid"
+        Margin="0,10,0,0"
+        AutoGenerateColumns="True"
+        ItemsSource="{x:Bind BooksViewModel.Ksiazki, Mode=OneWay}"
+        Height="400" />
+
+        </StackPanel>
     </Grid>
 </Page>

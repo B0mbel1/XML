@@ -2,7 +2,7 @@
     x:Class="bibKliWitkowski.AuthorListMenuPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:toolKit="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:local="using:bibKliWitkowski"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -11,8 +11,21 @@
 
     <Grid>
         <StackPanel Margin="15">
-            <TextBlock Text="Autorzy"  Style="{ThemeResource HeaderTextBlockStyle}"/>
-            <toolKit:DataGrid Name="dataGrid" Margin="15" ItemsSource="{x:Bind AuthorsViewModel.Autorzy}"/>
+
+            <TextBlock Text="Autorzy" Style="{ThemeResource HeaderTextBlockStyle}" />
+
+            <StackPanel Orientation="Horizontal" Margin="0,10,0,10">
+                <Button Content="Dodaj" Click="DodajAutora_Click" Margin="5" />
+                <Button Content="Usuń zaznaczonego" Click="UsunAutora_Click" Margin="5" />
+            </StackPanel>
+
+            <toolkit:DataGrid
+                x:Name="AuthorsDataGrid"
+                Margin="0,10,0,0"
+                AutoGenerateColumns="True"
+                ItemsSource="{x:Bind AuthorsViewModel.Autorzy, Mode=OneWay}"
+                Height="400" />
+
         </StackPanel>
     </Grid>
 </Page>
